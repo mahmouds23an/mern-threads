@@ -75,8 +75,43 @@ const logoutUser = async (req, res) => {
     res.status(200).json({ message: "User logged out successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
-    console.log("Error in loginUserFn: ", err.message);
+    console.log("Error in logoutUserFn: ", err.message);
   }
 };
 
-export { signupUser, loginUser, logoutUser };
+const followUnFollowUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userToModify = await User.findById(id); // the user we need to follow or unfollow
+    const currentUser = await User.findById(req.user._id); // me or logged in user
+    if (id === String(req.user._id)) {
+      return res
+        .status(400)
+        .json({ message: "You cannot follow or unfollow yourself😂" });
+    }
+    if (!userToModify || !currentUser)
+      return res.status(404).json({ message: "User not found" });
+    // get following list
+    const isFollowing = currentUser.following.includes(id);
+    if (isFollowing) {
+      // unfollow user - current user following -1 and user to modify followers -1
+      await User.findByIdAndUpdate(req.user._id, { $pull: { following: id } });
+      await User.findByIdAndUpdate(id, { $pull: { followers: req.user._id } });
+      res.status(200).json({
+        message: `${currentUser.username} unfollowed ${userToModify.username} successfully`,
+      });
+    } else {
+      // follow user - current user following +1 and user to modify followers +1
+      await User.findByIdAndUpdate(req.user._id, { $push: { following: id } });
+      await User.findByIdAndUpdate(id, { $push: { followers: req.user._id } });
+      res.status(200).json({
+        message: `${currentUser.username} followed ${userToModify.username} successfully`,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+    console.log("Error in followUnFollowUserFn: ", err.message);
+  }
+};
+
+export { signupUser, loginUser, logoutUser, followUnFollowUser };
