@@ -1,0 +1,7 @@
+All routes 
+--------------
+1- Auth routes
+    1.1 => user signup route => http://localhost:5000/api/users/signup
+    1.2 => user signin route => http://localhost:5000/api/users/login
+    1.3 => user logout route => http://localhost:5000/api/users/logout
+------------------------------------------------------------------------
