@@ -16,3 +16,5 @@ All routes
     3.1 => user create a post route => http://localhost:5000/api/posts/create - (post request)
     3.2 => user get a post route => http://localhost:5000/api/posts/:id - (get request)
     3.3 => user delete a post route => http://localhost:5000/api/posts/:id - (delete request)
+    3.4 => user like and dislike a post route => http://localhost:5000/api/posts/like/:id - (post request)
+    3.5 => user reply on post route => http://localhost:5000/api/posts/reply/:id - (post request)
