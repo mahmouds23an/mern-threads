@@ -4,8 +4,13 @@ All routes
     1.1 => user signup route => http://localhost:5000/api/users/signup - (post request)
     1.2 => user signin route => http://localhost:5000/api/users/login - (post request)
     1.3 => user logout route => http://localhost:5000/api/users/logout - (post request)
-------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------
 2- User routes  
     2.1 => user follow and unfollow route => http://localhost:5000/api/users/follow/:id - (post request)
     2.2 => user profile update route => http://localhost:5000/api/users/update/:id - (post request)
     2.3 => user profile details route => http://localhost:5000/api/users/profile/:username - (get request)
+
+--------------------------------------------------------------------------------------------------------------------------------
+3- Post routes
+    3.1 => user create a post route => http://localhost:5000/api/posts/create - (post request)
