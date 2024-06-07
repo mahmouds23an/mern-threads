@@ -9,7 +9,7 @@ const signupUser = async (req, res) => {
     // check exist of user by checking email or username
     const user = await User.findOne({ $or: [{ email }, { username }] });
     if (user) {
-      return res.status(400).json({ message: "User already exist" });
+      return res.status(400).json({ error: "User already exist" });
     }
     // if not exist hash password using bcryptjs
     const salt = await bcrypt.genSalt(10);
@@ -34,10 +34,10 @@ const signupUser = async (req, res) => {
         username: newUser.username,
       });
     } else {
-      res.status(400).json({ message: "Invalid user data" });
+      res.status(400).json({ error: "Invalid user data" });
     }
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
     console.log("Error in signupUserFn: ", err.message);
   }
 };
@@ -53,7 +53,7 @@ const loginUser = async (req, res) => {
       user?.password || ""
     );
     if (!user || !isPasswordCorrect)
-      return res.status(400).json({ message: "Wrong email or password" });
+      return res.status(400).json({ error: "Wrong email or password" });
     // generate token if user exist and password matching correct
     generateTokenAndSetCookie(user._id, res);
     // send user in response
@@ -65,7 +65,7 @@ const loginUser = async (req, res) => {
       username: user.username,
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
     console.log("Error in loginUserFn: ", err.message);
   }
 };
@@ -75,7 +75,7 @@ const logoutUser = async (req, res) => {
     res.cookie("jwt", "", { maxAge: 1 });
     res.status(200).json({ message: "User logged out successfully" });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
     console.log("Error in logoutUserFn: ", err.message);
   }
 };
@@ -91,7 +91,7 @@ const followUnFollowUser = async (req, res) => {
         .json({ message: "You cannot follow or unfollow yourself😂" });
     }
     if (!userToModify || !currentUser)
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     // get following list
     const isFollowing = currentUser.following.includes(id);
     if (isFollowing) {
@@ -110,7 +110,7 @@ const followUnFollowUser = async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
     console.log("Error in followUnFollowUserFn: ", err.message);
   }
 };
@@ -120,11 +120,11 @@ const updateUser = async (req, res) => {
   const userId = req.user._id;
   try {
     let user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ error: "User not found" });
     if (req.params.id !== userId.toString())
       return res
         .status(400)
-        .json({ message: "You cannot update other user's profile 😊" });
+        .json({ error: "You cannot update other user's profile 😊" });
     if (password) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -138,7 +138,7 @@ const updateUser = async (req, res) => {
     user = await user.save();
     res.status(200).json({ message: "Profile updated successfully", user });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
     console.log("Error in updateUserFn: ", err.message);
   }
 };
@@ -149,10 +149,10 @@ const getUserProfile = async (req, res) => {
     const user = await User.findOne({ username })
       .select("-password")
       .select("-updatedAt");
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ error: "User not found" });
     res.status(200).json(user);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
     console.log("Error in updateUserFn: ", err.message);
   }
 };
